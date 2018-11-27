@@ -28,7 +28,20 @@ app.get("/", (req, res) => {
     const indexPath = path.join(publicDirectory, "webpages", "index.html");
     res.sendFile(indexPath);
 });
+app.get("/index.html", (req, res) => {
+    const indexPath = path.join(publicDirectory, "webpages", "index.html");
+    res.sendFile(indexPath);
+});
 
+app.get("/about.html", (req, res) => {
+    const aboutPath = path.join(publicDirectory, "webpages", "about.html");
+    res.sendFile(aboutPath);
+});
+
+app.get("/advancedSearch.html", (req, res) => {
+    const searchPath = path.join(publicDirectory, "webpages", "advancedSearch.html");
+    res.sendFile(searchPath);
+});
 
 app.get("/resources", (req, res) => {
     const allCourses = {};
