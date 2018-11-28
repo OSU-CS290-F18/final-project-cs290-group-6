@@ -1,8 +1,4 @@
 const https = require("https");
-const returnObject = {
-    domain: "mit",
-    departments: []
-};
 
 /**
  * Delete properties that will not be used in the app
@@ -41,11 +37,16 @@ function resultsForDepartment(department, title) {
             courses: courses
         };
 
-        return returnObject.departments.push(department);
+        return department;
     }).catch(_ => console.log(`ERROR: Encounter error while requesting for (${department})`));
 }
 
 function resultsForAllDepartments() {
+    const returnObject = {
+        domain: "mit",
+        departments: []
+    };
+
     return new Promise((resolve, reject) => https.get("https://ocw.mit.edu/courses/find-by-number/departments.json", res => {
         if (res.statusCode !== 200) {
             reject(new Error(res.statusMessage));
@@ -58,7 +59,9 @@ function resultsForAllDepartments() {
         });
     })).then(rawData => { //--- ===> remove .slice(n,k) to get all departments <===
         const requests = JSON.parse(rawData).slice(0,2).map(department => {
-            return resultsForDepartment(department.id, department.title);
+            return resultsForDepartment(department.id, department.title).then(result => {
+                returnObject.departments.push(result);
+            });
         });
         return Promise.all(requests).then(_ => returnObject);
     }).catch(_ => console.log("Encounter error while requesting for all departments"));
