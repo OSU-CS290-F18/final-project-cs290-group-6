@@ -42,9 +42,40 @@ if(searchBtn){
 
 
 
-//function getFilters
+function getFilters(){
+    var categories = document.querySelectorAll('#filter-toggles input');
+    var result = [];
+    categories.forEach(function (elem){
+        if(elem.checked){
+            result.push(elem.id);
+        }
+    })
+    console.log(result);
+    return result;
+}
 
+var body = document.querySelector('body');
 
+var cat;
+var categories;
+function containsCategory(course){
+    if(course[cat]){
+        return course;            
+    }
+}
+
+function test(){
+    categories = getFilters();
+    var courses = allData['mit']['departments'][0]['courses'];
+    console.log("BEFORE FILTER: ", courses);
+    categories.forEach(function (elem){
+        cat = elem;
+        courses = courses.filter(containsCategory); 
+    })
+    console.log("AFTER FILTER: ", courses);
+}
+
+body.addEventListener('click', test);
  // var filters = {
     //     'title': 
     //     'semester':
