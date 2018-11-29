@@ -7,6 +7,8 @@ const app = express();
 
 const mitParser = require(__dirname + "/parsers/mit-parser");
 
+const cache = {};
+
 // Setup view engine
 const viewsDirectory = __dirname + "/views";
 app.set('views', viewsDirectory);
@@ -19,7 +21,11 @@ app.use(express.urlencoded({extended: false}));
 const publicDirectory = path.join(__dirname, "public");
 app.use(express.static(publicDirectory));
 
-
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 /**
  * MARK: Custom routing
  */
@@ -31,17 +37,19 @@ app.get("/", (req, res) => {
 
 
 app.get("/resources", (req, res) => {
-    const allCourses = {};
     const parsers = [mitParser].map(parser => {
         return parser.results().then(result => {
-            allCourses[parser.name] = result;
+            cache[parser.name] = result;
         });
     });
 
-    console.log("Fetching resources...");
-    Promise.all(parsers).then(() => {
-        res.send(allCourses)
-    });
+    if(cache.isEmpty()) {
+        Promise.all(parsers).then(_ => res.send(cache));
+    } else {
+        console.log("-----> Sending from cache",);
+        res.send(cache);
+        Promise.all(parsers).then();
+    }
 });
 
 
