@@ -49,6 +49,10 @@ function getSearchBy(){
             result.push(elem.id);
         }
     })
+    if(result.length === 0){
+        result.push('title');
+        result.push('sem');
+    }
     return result;
 }
 
@@ -64,30 +68,44 @@ function getFilters(){
     return result;
 }
 
-var body = document.querySelector('body');
 
-var cat;
-var categories;
-function containsCategory(course){
-    if(course[cat]){
-        return course;            
-    }
-}
 
-function filterByCategory(courses_arr){
-    categories = getFilters();
-    categories.forEach(function (elem){
-        cat = elem;
-        courses_arr = courses_arr.filter(containsCategory); 
+function filterByText(courses_arr){
+    var fields_to_search = getSearchBy();
+    var queryText = document.getElementById('adv-search-text').value.toLowerCase();
+    fields_to_search.forEach(function (field){
+        courses_arr = courses_arr.filter(function (course){
+            // if(course[field].toLowerCase().includes(queryText)){
+                return course[field].toLowerCase().includes(queryText);
+            // }
+        });
     })
     return courses_arr;
 }
 
+//****************************************/
+
+function filterByCategory(courses_arr){
+    var categories = getFilters();
+    categories.forEach(function (cat){
+        courses_arr = courses_arr.filter(function (course){
+            if(course[cat]){
+                return course;
+            }
+        }); 
+    })
+    return courses_arr;
+}
+//****************************************/
+
 function test(){
     var courses = allData['mit']['departments'][0]['courses'];
     console.log("BEFORE FILTER: ", courses);
-    courses = filterByCategory(courses);
+    // courses = filterByCategory(courses);
+    courses = filterByText(courses);
     console.log("AFTER FILTER: ", courses);
 }
 
+
+var body = document.querySelector('body');
 body.addEventListener('click', test);
