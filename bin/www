@@ -69,3 +69,11 @@ function onListening() {
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
+
+Object.prototype.isEmpty = function() {
+    for(const key in this) {
+        if(this.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+};

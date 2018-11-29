@@ -26,24 +26,21 @@ function resultsForDepartment(department, title) {
         let rawData = "";
         res.on("data", chunk => rawData += chunk);
         res.on("end", () => {
-            resolve(rawData);
+            resolve(JSON.parse(rawData));
         });
-    })).then(rawData => {
-        const courses = JSON.parse(rawData);
+    })).then(courses => {
         deleteIrrelevantProperties(courses);
-
         const department = {
             name: title,
             courses: courses
         };
-
         return department;
     }).catch(_ => console.log(`ERROR: Encounter error while requesting for (${department})`));
 }
 
 function resultsForAllDepartments() {
     const returnObject = {
-        domain: "mit",
+        domain: "MIT",
         departments: []
     };
 
@@ -55,10 +52,10 @@ function resultsForAllDepartments() {
         let rawData = "";
         res.on("data", chunk => rawData += chunk);
         res.on("end", () => {
-            resolve(rawData);
+            resolve(JSON.parse(rawData));
         });
-    })).then(rawData => { //--- ===> remove .slice(n,k) to get all departments <===
-        const requests = JSON.parse(rawData).slice(0,2).map(department => {
+    })).then(departments => {// remove .slice(n,k) to get all departments <===
+        const requests = departments.map(department => {
             return resultsForDepartment(department.id, department.title).then(result => {
                 returnObject.departments.push(result);
             });
