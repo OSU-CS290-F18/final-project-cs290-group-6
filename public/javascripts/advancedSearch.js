@@ -41,6 +41,16 @@ if(searchBtn){
 }
 
 
+function getSearchBy(){
+    var result = [];
+    var criteria = document.querySelectorAll('#filter-searchtype input');
+    criteria.forEach(function (elem){
+        if(elem.checked){
+            result.push(elem.id);
+        }
+    })
+    return result;
+}
 
 function getFilters(){
     var categories = document.querySelectorAll('#filter-toggles input');
@@ -64,24 +74,20 @@ function containsCategory(course){
     }
 }
 
-function test(){
+function filterByCategory(courses_arr){
     categories = getFilters();
-    var courses = allData['mit']['departments'][0]['courses'];
-    console.log("BEFORE FILTER: ", courses);
     categories.forEach(function (elem){
         cat = elem;
-        courses = courses.filter(containsCategory); 
+        courses_arr = courses_arr.filter(containsCategory); 
     })
+    return courses_arr;
+}
+
+function test(){
+    var courses = allData['mit']['departments'][0]['courses'];
+    console.log("BEFORE FILTER: ", courses);
+    courses = filterByCategory(courses);
     console.log("AFTER FILTER: ", courses);
 }
 
 body.addEventListener('click', test);
- // var filters = {
-    //     'title': 
-    //     'semester':
-    //     'audio':
-    //     'video':
-    //     'notes':
-    //     'textbook':
-    //     'exam':
-    // };
