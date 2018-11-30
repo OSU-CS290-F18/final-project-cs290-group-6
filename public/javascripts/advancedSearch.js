@@ -1,4 +1,6 @@
-
+//**************************************
+//Functions to Interact with Server
+//**************************************
 function loadResourcesFromServer(callback) {
     const xhreq = new XMLHttpRequest();
     xhreq.onreadystatechange = function () {
@@ -27,20 +29,18 @@ loadResourcesFromServer(update);
 
 //index search button listener
 var searchBtn = document.getElementById('search-button');
+var basicSearchText;
 if(searchBtn){
     searchBtn.addEventListener('click', function (event){
         console.log('Button was clicked.')
-        var textQuery = document.getElementById("search-text").textContent;
-        var filters = {
-            'title': true, 
-            'semester': true,
-            'categories': [], 
-        };
+        basicSearchText = document.getElementById("search-text").textContent;
         window.location.href = "./advancedSearch.html";
     });
 }
 
-
+//**************************************
+//Functions to Read User Input
+//**************************************
 function getSearchBy(){
     var result = [];
     var criteria = document.querySelectorAll('#filter-searchtype input');
@@ -64,16 +64,17 @@ function getFilters(){
             result.push(elem.id);
         }
     })
-    console.log(result);
     return result;
 }
 
+//**************************************
+//Functions to Filter Main Data
+//**************************************
 
-function filterByText(courses_arr){
+function filterByText(courses_arr, queryText){
     var fields_to_search = getSearchBy();
-    var queryText = document.getElementById('adv-search-text').value.toLowerCase();
     if(queryText){
-        queryText = queryText.trim().split(" ");
+        queryText = queryText.toLowerCase().trim().split(" ");//convert to lowercase, split query into words on spaces
         var keep = [];
         courses_arr.forEach(function (course){
             fields_to_search.forEach(function (field){
@@ -95,8 +96,6 @@ function filterByText(courses_arr){
     return courses_arr;
 }
 
-//****************************************/
-
 function filterByCategory(courses_arr){
     var categories = getFilters();
     categories.forEach(function (cat){
@@ -108,17 +107,90 @@ function filterByCategory(courses_arr){
     })
     return courses_arr;
 }
-//****************************************/
 
-function test(){
-    var dep_name = allData['mit']['departments'][12]['name']
-    var courses = allData['mit']['departments'][12]['courses'];
-    console.log("BEFORE FILTER: ",dep_name, courses);
-    // courses = filterByCategory(courses);
-    courses = filterByText(courses);
-    console.log("AFTER FILTER: ", dep_name, courses);
+function search(queryText){
+    var courses_to_display = [];
+    for(source in allData){
+        allData[source]['departments'].forEach(function (dep){
+            var temp_courses = filterByCategory(dep['courses']);
+            temp_courses = filterByText(temp_courses, queryText);
+            courses_to_display = courses_to_display.concat(temp_courses);
+        })
+    }
+    return courses_to_display;
 }
 
+//**************************************
+//Functions to Display Results
+//**************************************
+
+function displayCourse(course){
+    var resultInfoList = {
+        'title': 'title',
+        'semester': 'sem',
+    }
+    var resultCatList = {
+        'title':'title',
+        'sem':'semester',
+        'completeAudio':'Audio',
+        'completeVideo':'Video',
+        'completeLectures':'notes',
+        'onlineTextbooks':'Textbook',
+        'exams':'exam',
+        'href':'url'
+    };
+
+    var resDiv = document.createElement('div');
+    resDiv.classList.add('result');
+
+    for(key in resultInfoList){
+        resDiv.setAttribute('data-'+resultInfoList[key].toLowerCase(), course[key]);
+    }
+    for(key in resultCatList){
+        resDiv.setAttribute('data-'+resultCatList[key].toLowerCase(), course[key]);
+    }
+
+    var contentDiv = document.createElement('div');
+    contentDiv.classList.add('result-contents');
+
+    for(key in resultInfoList){
+        var className = 'result-value-'+ resultInfoList[key].toLowerCase();
+        var infoContainer = document.createElement('div');
+        infoContainer.classList.add('result-info-container');
+        
+        var aTag = document.createElement('a');
+        aTag.classList.add(className);
+        aTag.textContent = course[key];
+        infoContainer.appendChild(aTag);
+        contentDiv.appendChild(infoContainer);
+    }
+
+    for(key in resultCatList){
+        var className = 'result-value-'+resultCatList[key].toLowerCase();
+        var infoContainer = document.createElement('div');
+        infoContainer.classList.add('result-category-container');
+        
+        var aTag = document.createElement('a');
+        aTag.classList.add(className);
+        if(course[key]){
+            aTag.textContent = resultCatList[key];
+        }
+        infoContainer.appendChild(aTag);
+        contentDiv.appendChild(infoContainer);
+    }
+    var resultsContainer = document.getElementById('all-results-container');
+    resultsContainer.appendChild(contentDiv);
+}
+
+
+function test(){
+    var res;
+    res = search(document.getElementById('adv-search-text').value);
+    console.log(res);
+    res.forEach(function (elem){
+        displayCourse(elem);
+    })
+}
 
 var body = document.querySelector('body');
 body.addEventListener('click', test);
