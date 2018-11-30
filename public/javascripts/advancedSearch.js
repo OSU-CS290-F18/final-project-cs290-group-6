@@ -125,68 +125,22 @@ function search(queryText){
 //**************************************
 
 function displayCourse(course){
-    var resultInfoList = {
-        'title': 'title',
-        'semester': 'sem',
-    }
-    var resultCatList = {
-        'title':'title',
-        'sem':'semester',
-        'completeAudio':'Audio',
-        'completeVideo':'Video',
-        'completeLectures':'notes',
-        'onlineTextbooks':'Textbook',
-        'exams':'exam',
-        'href':'url'
-    };
-
-    var resDiv = document.createElement('div');
-    resDiv.classList.add('result');
-
-    for(key in resultInfoList){
-        resDiv.setAttribute('data-'+resultInfoList[key].toLowerCase(), course[key]);
-    }
-    for(key in resultCatList){
-        resDiv.setAttribute('data-'+resultCatList[key].toLowerCase(), course[key]);
-    }
-
-    var contentDiv = document.createElement('div');
-    contentDiv.classList.add('result-contents');
-
-    for(key in resultInfoList){
-        var className = 'result-value-'+ resultInfoList[key].toLowerCase();
-        var infoContainer = document.createElement('div');
-        infoContainer.classList.add('result-info-container');
-        
-        var aTag = document.createElement('a');
-        aTag.classList.add(className);
-        aTag.textContent = course[key];
-        infoContainer.appendChild(aTag);
-        contentDiv.appendChild(infoContainer);
-    }
-
-    for(key in resultCatList){
-        var className = 'result-value-'+resultCatList[key].toLowerCase();
-        var infoContainer = document.createElement('div');
-        infoContainer.classList.add('result-category-container');
-        
-        var aTag = document.createElement('a');
-        aTag.classList.add(className);
-        if(course[key]){
-            aTag.textContent = resultCatList[key];
-        }
-        infoContainer.appendChild(aTag);
-        contentDiv.appendChild(infoContainer);
-    }
+    var courseHTML = Handlebars.templates.courseResult(course);
     var resultsContainer = document.getElementById('all-results-container');
-    resultsContainer.appendChild(contentDiv);
+    resultsContainer.insertAdjacentHTML('beforeend', courseHTML);
 }
 
+function clearResults(){
+    var resultsContainer = document.getElementById('all-results-container');
+    while(resultsContainer.hasChildNodes()){
+        resultsContainer.removeChild(resultsContainer.firstChild);
+    }
+}
 
 function test(){
+    clearResults();
     var res;
     res = search(document.getElementById('adv-search-text').value);
-    console.log(res);
     res.forEach(function (elem){
         displayCourse(elem);
     })
