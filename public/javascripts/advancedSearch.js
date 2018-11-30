@@ -69,17 +69,29 @@ function getFilters(){
 }
 
 
-
 function filterByText(courses_arr){
     var fields_to_search = getSearchBy();
     var queryText = document.getElementById('adv-search-text').value.toLowerCase();
-    fields_to_search.forEach(function (field){
-        courses_arr = courses_arr.filter(function (course){
-            // if(course[field].toLowerCase().includes(queryText)){
-                return course[field].toLowerCase().includes(queryText);
-            // }
-        });
-    })
+    if(queryText){
+        queryText = queryText.trim().split(" ");
+        var keep = [];
+        courses_arr.forEach(function (course){
+            fields_to_search.forEach(function (field){
+                queryText.forEach(function (word){
+                    if(course[field]){
+                        var course_field = course[field].toLowerCase(); 
+                        if(course_field.includes(word) && !(keep.includes(course))){
+                            keep.push(course);
+                        }
+                    }
+                    else{
+                        console.log('COURSE OBJ MISSING FIELD '+ field.toUpperCase())
+                    }
+                })
+            })
+        })
+        return keep;
+    }
     return courses_arr;
 }
 
@@ -99,11 +111,12 @@ function filterByCategory(courses_arr){
 //****************************************/
 
 function test(){
-    var courses = allData['mit']['departments'][0]['courses'];
-    console.log("BEFORE FILTER: ", courses);
+    var dep_name = allData['mit']['departments'][12]['name']
+    var courses = allData['mit']['departments'][12]['courses'];
+    console.log("BEFORE FILTER: ",dep_name, courses);
     // courses = filterByCategory(courses);
     courses = filterByText(courses);
-    console.log("AFTER FILTER: ", courses);
+    console.log("AFTER FILTER: ", dep_name, courses);
 }
 
 
