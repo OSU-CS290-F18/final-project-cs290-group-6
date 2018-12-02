@@ -128,20 +128,6 @@ function clearResults(){
     }
 }
 
-function searchListener(){
-    var params = (new URL(document.location)).searchParams;//check for param from basic search
-    var queryText = params.get('search');
-    if(!queryText){
-        queryText = document.getElementById('adv-search-text').value//if not basic search, check advanced search query
-    }
-    clearResults();//clear current results
-    var res = search(queryText);//search the data for applicable courses
-    res.forEach(function (elem){
-        displayCourse(elem);
-    })
-}
-
-
 
 //**************************************
 //Functions to Interact with Server
@@ -179,9 +165,26 @@ if(basicSearchBtn){
     });
 }
 
+function searchListener(){
+    var basicSearchBtn = document.getElementById('search-button'); //used to check if on basic or adv page
+    var params = (new URL(document.location)).searchParams;//check for param from basic search
+    var queryText = params.get('search');
+    if(!queryText && !basicSearchBtn){
+        queryText = document.getElementById('adv-search-text').value//if not basic search, check advanced search query
+    }
+    if(!basicSearchBtn){
+        clearResults();//clear current results
+        var res = search(queryText);//search the data for applicable courses
+        res.forEach(function (elem){
+            displayCourse(elem);
+        })    
+    }
+}
+
 var advSearchBtn = document.getElementById('adv-search-button');
-advSearchBtn.addEventListener('click', searchListener);
+if(advSearchBtn){
+    advSearchBtn.addEventListener('click', searchListener);
+}
 
 var allData;
 loadResourcesFromServer(update);
-
