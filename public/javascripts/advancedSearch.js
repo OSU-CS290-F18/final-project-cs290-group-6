@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //**************************************
 //Functions to Interact with Server
 //**************************************
@@ -28,6 +29,8 @@ var allData;
 loadResourcesFromServer(update);
 
 
+=======
+>>>>>>> 3308972256cbc432d6048edbcdb0d097dcd8ea17
 
 //**************************************
 //Functions to Read User Input
@@ -59,7 +62,7 @@ function getFilters(){
 }
 
 //**************************************
-//Functions to Filter Main Data
+//Functions to Filter Resource Data
 //**************************************
 
 function filterByText(courses_arr, queryText){
@@ -116,84 +119,72 @@ function search(queryText){
 //**************************************
 
 function displayCourse(course){
-    var resultInfoList = {
-        'title': 'title',
-        'semester': 'sem',
-    }
-    var resultCatList = {
-        'title':'title',
-        'sem':'semester',
-        'completeAudio':'Audio',
-        'completeVideo':'Video',
-        'completeLectures':'notes',
-        'onlineTextbooks':'Textbook',
-        'exams':'exam',
-        'href':'url'
-    };
-
-    var resDiv = document.createElement('div');
-    resDiv.classList.add('result');
-
-    for(key in resultInfoList){
-        resDiv.setAttribute('data-'+resultInfoList[key].toLowerCase(), course[key]);
-    }
-    for(key in resultCatList){
-        resDiv.setAttribute('data-'+resultCatList[key].toLowerCase(), course[key]);
-    }
-
-    var contentDiv = document.createElement('div');
-    contentDiv.classList.add('result-contents');
-
-    for(key in resultInfoList){
-        var className = 'result-value-'+ resultInfoList[key].toLowerCase();
-        var infoContainer = document.createElement('div');
-        infoContainer.classList.add('result-info-container');
-        
-        var aTag = document.createElement('a');
-        aTag.classList.add(className);
-        aTag.textContent = course[key];
-        infoContainer.appendChild(aTag);
-        contentDiv.appendChild(infoContainer);
-    }
-
-    for(key in resultCatList){
-        var className = 'result-value-'+resultCatList[key].toLowerCase();
-        var infoContainer = document.createElement('div');
-        infoContainer.classList.add('result-category-container');
-        
-        var aTag = document.createElement('a');
-        aTag.classList.add(className);
-        if(course[key]){
-            aTag.textContent = resultCatList[key];
-        }
-        infoContainer.appendChild(aTag);
-        contentDiv.appendChild(infoContainer);
-    }
+    var courseHTML = Handlebars.templates.courseResult(course);
     var resultsContainer = document.getElementById('all-results-container');
-    resultsContainer.appendChild(contentDiv);
+    resultsContainer.insertAdjacentHTML('beforeend', courseHTML);
 }
 
-
-//index search button listener
-var searchBtn = document.getElementById('search-button');
-// var basicSearchText;
-if(searchBtn){
-    searchBtn.addEventListener('click', function (event){
-        console.log('Button was clicked.')
-        var basicSearchText = document.getElementById("search-text").textContent;
-        window.location.href = "./advancedSearch.html";
-        console.log(search(basicSearchText));
-    });
+function clearResults(){
+    var resultsContainer = document.getElementById('all-results-container');
+    while(resultsContainer.hasChildNodes()){
+        resultsContainer.removeChild(resultsContainer.firstChild);
+    }
 }
 
-function test(){
-    var res;
-    res = search(document.getElementById('adv-search-text').value);
-    console.log(res);
+function searchListener(){
+    var params = (new URL(document.location)).searchParams;//check for param from basic search
+    var queryText = params.get('search');
+    if(!queryText){
+        queryText = document.getElementById('adv-search-text').value//if not basic search, check advanced search query
+    }
+    clearResults();//clear current results
+    var res = search(queryText);//search the data for applicable courses
     res.forEach(function (elem){
         displayCourse(elem);
     })
 }
 
-var body = document.querySelector('body');
-body.addEventListener('click', test);
+
+
+//**************************************
+//Functions to Interact with Server
+//**************************************
+function loadResourcesFromServer(callback) {
+    const xhreq = new XMLHttpRequest();
+    xhreq.onreadystatechange = function () {
+        if (this.readyState !== 4 || this.status !== 200) {
+            return;
+        }
+        console.log(this);
+        const responseData = JSON.parse(this.responseText);
+        callback(responseData);
+    };
+
+    xhreq.open("GET", "resources");
+    xhreq.send();
+}
+
+
+function update(responseData) {
+    allData = responseData;
+    searchListener();//load all the data on initial request
+}
+
+//**************************************
+//Attatch Event Listeners and instantiate page
+//**************************************
+var basicSearchBtn = document.getElementById('search-button');
+var basicSearchText;
+if(basicSearchBtn){
+    basicSearchBtn.addEventListener('click', function (event){
+        basicSearchText = document.getElementById("search-text").value;
+        window.location.href = "./advancedSearch.html?search="+basicSearchText;
+    });
+}
+
+var advSearchBtn = document.getElementById('adv-search-button');
+advSearchBtn.addEventListener('click', searchListener);
+
+var allData;
+loadResourcesFromServer(update);
+
