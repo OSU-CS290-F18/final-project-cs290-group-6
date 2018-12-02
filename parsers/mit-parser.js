@@ -30,10 +30,10 @@ function resultsForDepartment(department, title) {
     })).then(courses => {
         deleteIrrelevantProperties(courses);
         const department = {
-            domain: title,
+            name: title,
             courses: courses
         };
-        console.log("Fetched " + department.domain);
+        console.log("Fetched " + department.name);
         return department;
     }).catch(_ => console.log(`ERROR: Encounter error while requesting for (${department})`));
 }
@@ -51,7 +51,7 @@ function resultsForAllDepartments() {
         });
     })).then(departments => {// remove .slice(n,k) to get all departments <===
         const requests = departments.map(department => {
-            return resultsForDepartment(department.id, department.title.toUpperCase());
+            return resultsForDepartment(department.id, department.title);
         });
         return Promise.all(requests);
     }).then(results => {
