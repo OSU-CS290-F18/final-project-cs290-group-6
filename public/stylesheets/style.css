@@ -1,0 +1,124 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	background-color: #bed2e7;
+}
+
+h1 {
+	color: #2d4a5a;	
+}
+
+a {
+	text-decoration: none;
+}
+
+header {
+	padding: 7px;
+	font-family: 'Roboto', sans-serif;
+	background-color: #eeeeee;
+}
+
+.adv-input-container {
+	font-family: 'Roboto', sans-serif;
+	padding: 10px;
+	
+}
+.site-title {
+	font-size: 80px;
+	font-weight: 100;
+	text-align: center;
+	padding-top: 175px;
+}
+
+.search-input-container {
+	width: 400px;
+	height: 30px;
+    margin: 0 auto;
+}
+
+.search-input {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+	width: 100%;
+	height: 100%;
+	border: 1px solid #dadada;
+	border-radius: 3px;
+}
+
+.action-input-container {
+	width: 100px;
+	height: 40px;
+    margin: 0 auto;
+	padding: 60px;
+	align-items: center;
+}
+
+.action-button {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+	padding: 5px;
+	color: white;
+	background-color: #2d4a5a;
+	border: 1px solid #ababab;
+	border-radius: 5px;
+	cursor: pointer;
+	width: 100%;
+}
+
+.filter-fieldset {
+	width: auto;
+	display: flex;
+}
+
+.result-header {
+	height: auto;
+	padding: 5px;
+	border: 1px solid #dadada;
+	border-radius: 3px;
+	background-color: #eeeeee;
+}
+.result-contents-header {
+	font-family: 'Roboto', sans-serif;
+	display: flex;
+}
+.result-info-container-header {
+	border: 2px solid #000000;
+	width: 380px;
+	text-align: center;
+	padding: 3px;
+	margin: 2px;
+}
+.result-category-container-header {
+	border: 2px solid #000000;
+	width: 80px;
+	text-align: center;
+	padding: 3px;
+	margin: 2px;
+}
+.result {
+	height: auto;
+	padding: 5px;
+	border: 1px solid #dadada;
+	border-radius: 3px;
+	background-color: #eeeeee;
+}
+.result-contents {
+	font-family: 'Roboto', sans-serif;
+	display: flex;
+}
+.result-info-container {
+	border: 2px solid #dfd8d8;
+	border-radius: 6px;
+	width: 380px;
+	text-align: center;
+	padding: 3px;
+	margin: 2px;
+}
+.result-category-container {
+	border: 2px solid #dfd8d8;
+	border-radius: 6px;
+	width: 80px;
+	text-align: center;
+	padding: 3px;
+	margin: 2px;
+}
