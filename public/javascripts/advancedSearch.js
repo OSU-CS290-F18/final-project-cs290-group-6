@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //**************************************
 //Functions to Interact with Server
 //**************************************
@@ -29,8 +28,6 @@ var allData;
 loadResourcesFromServer(update);
 
 
-=======
->>>>>>> 3308972256cbc432d6048edbcdb0d097dcd8ea17
 
 //**************************************
 //Functions to Read User Input
