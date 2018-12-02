@@ -16,7 +16,6 @@ function deleteIrrelevantProperties(courses) {
     });
 }
 
-
 function resultsForDepartment(department, title) {
     return new Promise((resolve, reject) => https.get(`https://ocw.mit.edu/courses/${department}/index.json`, res => {
         if (res.statusCode !== 200) {
@@ -31,19 +30,15 @@ function resultsForDepartment(department, title) {
     })).then(courses => {
         deleteIrrelevantProperties(courses);
         const department = {
-            name: title,
+            domain: title,
             courses: courses
         };
+        console.log("Fetched " + department.domain);
         return department;
     }).catch(_ => console.log(`ERROR: Encounter error while requesting for (${department})`));
 }
 
 function resultsForAllDepartments() {
-    const returnObject = {
-        domain: "MIT",
-        departments: []
-    };
-
     return new Promise((resolve, reject) => https.get("https://ocw.mit.edu/courses/find-by-number/departments.json", res => {
         if (res.statusCode !== 200) {
             reject(new Error(res.statusMessage));
@@ -55,12 +50,17 @@ function resultsForAllDepartments() {
             resolve(JSON.parse(rawData));
         });
     })).then(departments => {// remove .slice(n,k) to get all departments <===
-        const requests = departments.map(department => {
-            return resultsForDepartment(department.id, department.title).then(result => {
-                returnObject.departments.push(result);
-            });
+        const requests = departments.slice(0, 1).map(department => {
+            return resultsForDepartment(department.id, department.title.toUpperCase());
         });
-        return Promise.all(requests).then(_ => returnObject);
+        return Promise.all(requests);
+    }).then(results => {
+        const returnObject = {
+            domain: "MIT",
+            departments: results
+        };
+        console.log("Fetched all departments");
+        return returnObject;
     }).catch(_ => console.log("Encounter error while requesting for all departments"));
 }
 

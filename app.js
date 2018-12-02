@@ -5,12 +5,9 @@ const path = require("path");
 const express = require('express');
 const app = express();
 
-const mitParser = require(__dirname + "/parsers/mit-parser");
-
-const cache = {};
 
 // Setup view engine
-const viewsDirectory = __dirname + "/views";
+const viewsDirectory = path.join(__dirname, "views");
 app.set('views', viewsDirectory);
 app.set('view engine', 'pug');
 
@@ -26,31 +23,48 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-/**
- * MARK: Custom routing
- */
 
 app.get("/", (req, res) => {
     const indexPath = path.join(publicDirectory, "webpages", "index.html");
     res.sendFile(indexPath);
 });
 
+/**
+ * Comment out below code if stuff doesn't work
+ */
 
-app.get("/resources", (req, res) => {
-    const parsers = [mitParser].map(parser => {
-        return parser.results().then(result => {
-            cache[parser.name] = result;
-        });
-    });
+const resourceRouter = require("./routers/resources");
+app.use("/resources", resourceRouter);
 
-    if(cache.isEmpty()) {
-        Promise.all(parsers).then(_ => res.send(cache));
-    } else {
-        console.log("-----> Sending from cache",);
-        res.send(cache);
-        Promise.all(parsers).then();
-    }
-});
+/**
+ * And uncomment below
+ */
+
+// function isEmpty(object) {
+//     for (const key in object) {
+//         if (object.hasOwnProperty(key)) {
+//             return false;
+//         }
+//     }
+//     return true;
+// }
+// const cache = {};
+// const mitParser = require(path.join(__dirname, "parsers/mit-parser"));
+// app.get("/resources", (req, res) => {
+//     const parsers = [mitParser].map(parser => {
+//         return parser.results().then(result => {
+//             cache[parser.name] = result;
+//         });
+//     });
+//
+//     if(isEmpty(cache)) {
+//         Promise.all(parsers).then(_ => res.send(cache));
+//     } else {
+//         console.log("-----> Sending from cache",);
+//         res.send(cache);
+//         Promise.all(parsers).then();
+//     }
+// });
 
 
 /**

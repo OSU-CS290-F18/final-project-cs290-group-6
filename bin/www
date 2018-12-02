@@ -6,7 +6,7 @@
 
 // Module dependencies
 const app = require('../app');
-const debug = require('debug')('FinalProject:server');
+const debug = require('debug')('FinalProject-Private:server');
 const http = require('http');
 
 // Get port from environment and store in Express
@@ -70,10 +70,13 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
-Object.prototype.isEmpty = function() {
-    for(const key in this) {
-        if(this.hasOwnProperty(key))
-            return false;
-    }
-    return true;
-};
+
+
+// Custom prototype methods do not work with mongoose!!
+// Object.prototype.isEmpty = function() {
+//     for(const key in this) {
+//         if(this.hasOwnProperty(key))
+//             return false;
+//     }
+//     return true;
+// };
