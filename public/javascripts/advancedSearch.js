@@ -27,16 +27,7 @@ function update(responseData) {
 var allData;
 loadResourcesFromServer(update);
 
-//index search button listener
-var searchBtn = document.getElementById('search-button');
-var basicSearchText;
-if(searchBtn){
-    searchBtn.addEventListener('click', function (event){
-        console.log('Button was clicked.')
-        basicSearchText = document.getElementById("search-text").textContent;
-        window.location.href = "./advancedSearch.html";
-    });
-}
+
 
 //**************************************
 //Functions to Read User Input
@@ -182,6 +173,18 @@ function displayCourse(course){
     resultsContainer.appendChild(contentDiv);
 }
 
+
+//index search button listener
+var searchBtn = document.getElementById('search-button');
+// var basicSearchText;
+if(searchBtn){
+    searchBtn.addEventListener('click', function (event){
+        console.log('Button was clicked.')
+        var basicSearchText = document.getElementById("search-text").textContent;
+        window.location.href = "./advancedSearch.html";
+        console.log(search(basicSearchText));
+    });
+}
 
 function test(){
     var res;
