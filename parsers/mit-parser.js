@@ -50,7 +50,7 @@ function resultsForAllDepartments() {
             resolve(JSON.parse(rawData));
         });
     })).then(departments => {// remove .slice(n,k) to get all departments <===
-        const requests = departments.slice(0, 1).map(department => {
+        const requests = departments.map(department => {
             return resultsForDepartment(department.id, department.title.toUpperCase());
         });
         return Promise.all(requests);
