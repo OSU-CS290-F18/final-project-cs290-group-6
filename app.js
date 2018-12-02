@@ -28,6 +28,10 @@ app.get("/", (req, res) => {
     const indexPath = path.join(publicDirectory, "webpages", "index.html");
     res.sendFile(indexPath);
 });
+app.get("/index.html", (req, res) => {
+    const indexPath = path.join(publicDirectory, "webpages", "index.html");
+    res.sendFile(indexPath);
+});
 
 /**
  * Comment out below code if stuff doesn't work
@@ -35,6 +39,17 @@ app.get("/", (req, res) => {
 
 const resourceRouter = require("./routers/resources");
 app.use("/resources", resourceRouter);
+
+app.get("/about.html", (req, res) => {
+    const aboutPath = path.join(publicDirectory, "webpages", "about.html");
+    res.sendFile(aboutPath);
+});
+
+app.get("/advancedSearch.html", (req, res) => {
+    const searchPath = path.join(publicDirectory, "webpages", "advancedSearch.html");
+    res.sendFile(searchPath);
+});
+
 
 /**
  * And uncomment below
