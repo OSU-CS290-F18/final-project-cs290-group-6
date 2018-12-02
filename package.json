@@ -1,5 +1,5 @@
 {
-  "name": "courseorganizer",
+  "name": "coursefinder",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
     "express": "~4.16.0",
     "handlebars": "^4.0.12",
     "http-errors": "^1.7.1",
+    "mongoose": "^5.3.14",
     "morgan": "~1.9.0",
     "pug": "^2.0.3"
   }
