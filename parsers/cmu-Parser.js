@@ -14,16 +14,18 @@ function getCScourses()
 	return new Promise((resolve, reject) => 
 	https.get(cmuCSCourseURL, res =>
 	{
-		if(res.statusCode != 200)
-		{
+		if(res.statusCode != 200) {
 			reject(new Error(res.statusMessage));
 		}
 		let data = "";
 		res.on("data", (chunk) => {
 			data += chunk;
 		});
-		res.on("end", () =>
-		{
+		res.on("end", () => {
+			resolve(data);
+		});
+	})).then(data =>
+	{
 			const parsingArray = [];
 			const $ = cheerio.load(data);
 
@@ -58,7 +60,7 @@ function getCScourses()
 						completeVideo: false,
 						onlineTextbooks: false,
 						exams: false,
-						}));
+					}));
 				}
 				else
 				{
@@ -84,73 +86,64 @@ function getCScourses()
 						parsingArray.push(folCourseURL({
 							title: parsed[3],
 							courseCode: parsed[1],
-							href: parsed[2]}));
+							href: parsed[2]
+						}));
 					}
 				}
 			});
-//			const result = Promise.all(parsingArray);
-//				console.log(result);
-			resolve(Promise.all(parsingArray));
-			});
-	})).then(value =>
+		return Promise.all(parsingArray);
+	}).then(data =>
 	{
 		const result = [];
-		for(let i = 0; i < value.length; i++)
+		for(let i = 0; i < data.length; i++)
 		{
-			if(value[i] != undefined && value[i].href != "")
-			{
-				result.push(value[i]);
+			if(data[i] != undefined && data[i].href != "") {
+				result.push(data[i]);
 			}
 		}
 		return result;
-	}).catch((reason) =>
-	{
+	}).catch((reason) => {
 		console.log("getCScourses rejected:", reason);
 	});
 }
 
 function folCourseURL(course)
 {
-	if(!regex[2].test(course.href))
-	{
+	if(!regex[2].test(course.href)) {
 		course.href = courseBaseURL + course.href;
 	}
-	else
-	{
+	else {
 		course.href = course.href.replace(regex[2], "https");
 	}
 
 	return new Promise((resolve, reject) => 
 		https.get(course.href, res =>
 		{
-			if(res.statusCode == 301)
-			{
+			if(res.statusCode == 301) {
 				reject(res);
 			}
-			else if(res.statusCode != 200)
-			{
+			else if(res.statusCode != 200) {
 				reject(new Error(res.statusMessage));
 			}
 			let data = "";
 			res.on("data", (chunk) => {
 				data += chunk;
 			});
-			res.on("end", () =>
-			{
-				const $ = cheerio.load(data);
-				course.href = $("strong:contains('Course Website:')").next().text();
-				resolve(course);
+			res.on("end", () => {
+				resolve(data);
 			});
-		})
-	).catch((reason) =>
+	})).then(data => 
 	{
-		if(reason.statusCode == 301)
-		{
+		const $ = cheerio.load(data);
+		course.href = $("strong:contains('Course Website:')").next().text();
+		return course;
+	}).catch((reason) =>
+	{
+		if(reason.statusCode == 301) {
 			course.href = reason.headers.location;
 			folCourseURL(course);
 		}
-		else
-		{
+		else {
 			console.log("Promise in 'folCourseURL' rejected:", reason.statusMessage);
 		}
 	});
@@ -158,36 +151,17 @@ function folCourseURL(course)
 
 function results()
 {
-	return new Promise((resolve, reject) =>
-	{
-		const returnObj =
-		{
-			domain: "CMU",
-			departments: [{
-				name: "COMPUTERSCIENCE",
-				courses: [],
-			}]
-		};
-		resolve(returnObj);
-	}).then(results =>
-	{
-		results.departments[0].courses = getCScourses().then(function(value)
-		{
-			results.departments[0].courses = value;
-			console.log("== Fetched CMU CS courses", results);
-			return results;
-		});
-		return results;
+	const returnObj = {
+		domain: "CMU",
+		departments: [{
+		name: "COMPUTERSCIENCE", courses: [],
+	}]};
+	return getCScourses().then(results => {
+		returnObj.departments[0].courses = results;
+		console.log("Fetched CMU CS courses");
+		return returnObj;
 	});
 }
-
-var temp = results();
-console.log(temp);
-
-setTimeout(() =>
-{
-	console.log("results", temp);
-}, 7000);
 
 module.exports.name = "cmu";
 module.exports.results = results;
