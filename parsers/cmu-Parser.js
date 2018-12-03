@@ -88,20 +88,22 @@ function getCScourses()
 					}
 				}
 			});
-			const result = [];
-			Promise.all(parsingArray).then(function(value){
-				for(let i = 0; i < value.length; i++)
-				{
-					if(value[i] != undefined && value[i].href != "")
-					{
-						result.push(value[i]);
-					}
-				}
+//			const result = Promise.all(parsingArray);
 //				console.log(result);
-				resolve(result);
+			resolve(Promise.all(parsingArray));
 			});
-		});
-	})).catch((reason) =>
+	})).then(value =>
+	{
+		const result = [];
+		for(let i = 0; i < value.length; i++)
+		{
+			if(value[i] != undefined && value[i].href != "")
+			{
+				result.push(value[i]);
+			}
+		}
+		return result;
+	}).catch((reason) =>
 	{
 		console.log("getCScourses rejected:", reason);
 	});
@@ -169,13 +171,16 @@ function results()
 		resolve(returnObj);
 	}).then(results =>
 	{
-		returnObj.departments[0].courses = getCScourses();
-		console.log("== Fetched CMU CS courses", results);
+		results.departments[0].courses = getCScourses().then(function(value)
+		{
+			results.departments[0].courses = value;
+			console.log("== Fetched CMU CS courses", results);
+			return results;
+		});
 		return results;
 	});
 }
 
-/*
 var temp = results();
 console.log(temp);
 
@@ -183,7 +188,6 @@ setTimeout(() =>
 {
 	console.log("results", temp);
 }, 7000);
-*/
 
 module.exports.name = "cmu";
 module.exports.results = results;
