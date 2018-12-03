@@ -8,7 +8,8 @@ const Schema = mongoose.Schema;
 
 
 const mitParser = require(path.join(__dirname, "../parsers/mit-parser"));
-const parsers = [mitParser]; // Add more parsers here
+const cmuParser = require(path.join(__dirname, "../parsers/cmu-Parser"));
+const parsers = [mitParser, cmuParser]; // Add more parsers here
 
 const DomainSchema =  new Schema({
     _id: String,
