@@ -55,11 +55,11 @@ function getCScourses()
 						courseCode: parsed[2],
 						href: parsed[1],
 						sem: parsed[4] + " 20" + parsed[5],
-						completeAudio: false,
-						completeLectures: false,
-						completeVideo: false,
-						onlineTextbooks: false,
-						exams: false,
+						completeAudio: undefined,
+						completeLectures: undefined,
+						completeVideo: undefined,
+						onlineTextbooks: undefined,
+						exams: undefined,
 					}));
 				}
 				else
