@@ -1,33 +1,3 @@
-//**************************************
-//Functions to Interact with Server
-//**************************************
-function loadResourcesFromServer(callback) {
-    const xhreq = new XMLHttpRequest();
-    xhreq.onreadystatechange = function () {
-        if (this.readyState !== 4 || this.status !== 200) {
-            return;
-        }
-        console.log(this);
-        const responseData = JSON.parse(this.responseText);
-        callback(responseData);
-    };
-
-    xhreq.open("GET", "resources");
-    xhreq.send();
-    console.log('LOAD CALLED');
-}
-
-
-function update(responseData) {
-    // document.body.innerText = JSON.stringify(responseData);
-    allData = responseData;
-    console.log(allData);
-}
-
-var allData;
-loadResourcesFromServer(update);
-
-
 
 //**************************************
 //Functions to Read User Input
@@ -128,6 +98,20 @@ function clearResults(){
     }
 }
 
+function searchListener(){
+    var params = (new URL(document.location)).searchParams;//check for param from basic search
+    var queryText = params.get('search');
+    if(!queryText){
+        queryText = document.getElementById('adv-search-text').value//if not basic search, check advanced search query
+    }
+    clearResults();//clear current results
+    var res = search(queryText);//search the data for applicable courses
+    res.forEach(function (elem){
+        displayCourse(elem);
+    })
+}
+
+
 
 //**************************************
 //Functions to Interact with Server
@@ -165,26 +149,9 @@ if(basicSearchBtn){
     });
 }
 
-function searchListener(){
-    var basicSearchBtn = document.getElementById('search-button'); //used to check if on basic or adv page
-    var params = (new URL(document.location)).searchParams;//check for param from basic search
-    var queryText = params.get('search');
-    if(!queryText && !basicSearchBtn){
-        queryText = document.getElementById('adv-search-text').value//if not basic search, check advanced search query
-    }
-    if(!basicSearchBtn){
-        clearResults();//clear current results
-        var res = search(queryText);//search the data for applicable courses
-        res.forEach(function (elem){
-            displayCourse(elem);
-        })    
-    }
-}
-
 var advSearchBtn = document.getElementById('adv-search-button');
-if(advSearchBtn){
-    advSearchBtn.addEventListener('click', searchListener);
-}
+advSearchBtn.addEventListener('click', searchListener);
 
 var allData;
 loadResourcesFromServer(update);
+
