@@ -61,6 +61,14 @@ function getFilters(){
 //**************************************
 //Functions to Filter Resource Data
 //**************************************
+var ignore = [
+    'to',
+    'and',
+    'of',
+    'or',
+    'a',
+    'the',
+]
 
 function filterByText(courses_arr, queryText){
     var fields_to_search = getSearchBy();
@@ -71,10 +79,14 @@ function filterByText(courses_arr, queryText){
             fields_to_search.forEach(function (field){
                 queryText.forEach(function (word){
                     if(course[field]){
-                        var course_field = course[field].toLowerCase(); 
-                        if(course_field.includes(word) && !(keep.includes(course))){
-                            keep.push(course);
-                        }
+                        var course_field_words = course[field].split(' '); 
+                        course_field_words.forEach(function (course_word){
+                            if(!ignore.includes(course_word)){
+                                if(course_word.toLowerCase() === word && !(keep.includes(course))){
+                                    keep.push(course);
+                                }
+                            }
+                        })
                     }
                     else{
                         console.log('COURSE OBJ MISSING FIELD '+ field.toUpperCase())
