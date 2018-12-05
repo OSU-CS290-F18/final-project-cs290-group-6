@@ -91,7 +91,7 @@ function filterByCategory(courses_arr){
     var categories = getFilters();
     categories.forEach(function (cat){
         courses_arr = courses_arr.filter(function (course){
-            if(course[cat]){
+            if(course[cat] !== false){
                 return course;
             }
         }); 
