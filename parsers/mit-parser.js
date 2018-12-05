@@ -14,7 +14,7 @@ function deleteIrrelevantProperties(courses) {
         delete course.otherAudio;
         delete course.otherVideo;
 		  let temp = course.href;
-		  course.href = "https://ocw.mit.edu/" + temp;
+		  course.href = "https://ocw.mit.edu" + temp;
     });
 }
 
