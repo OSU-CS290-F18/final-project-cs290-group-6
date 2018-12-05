@@ -32,7 +32,7 @@ templates['courseResult'] = template({"1":function(container,depth0,helpers,part
     + "\" data-video=\""
     + alias4(((helper = (helper = helpers.completeVideo || (depth0 != null ? depth0.completeVideo : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"completeVideo","hash":{},"data":data}) : helper)))
     + "\" data-notes=\""
-    + alias4(((helper = (helper = helpers.completeLectures || (depth0 != null ? depth0.completeLectures : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"completeLectures","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.lectureNotes || (depth0 != null ? depth0.lectureNotes : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"lectureNotes","hash":{},"data":data}) : helper)))
     + "\" data-textbook=\""
     + alias4(((helper = (helper = helpers.onlineTextbooks || (depth0 != null ? depth0.onlineTextbooks : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"onlineTextbooks","hash":{},"data":data}) : helper)))
     + "\" data-exam=\""
@@ -50,7 +50,7 @@ templates['courseResult'] = template({"1":function(container,depth0,helpers,part
     + "        </div>\n        <div class=\"result-category-container\">\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.completeVideo : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\n        <div class=\"result-category-container\">\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.completeLectures : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.lectureNotes : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\n        <div class=\"result-category-container\">\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.onlineTextbooks : depth0),{"name":"if","hash":{},"fn":container.program(13, data, 0),"inverse":container.program(15, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\n        <div class=\"result-category-container\">\n"

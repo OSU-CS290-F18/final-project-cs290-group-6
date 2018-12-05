@@ -1,4 +1,4 @@
-<div class="result" data-title="{{title}}" data-semester="{{sem}}" data-audio="{{completeAudio}}" data-video="{{completeVideo}}" data-notes="{{completeLectures}}" data-textbook="{{onlineTextbooks}}" data-exam="{{exams}}" data-url="{{href}}">
+<div class="result" data-title="{{title}}" data-semester="{{sem}}" data-audio="{{completeAudio}}" data-video="{{completeVideo}}" data-notes="{{lectureNotes}}" data-textbook="{{onlineTextbooks}}" data-exam="{{exams}}" data-url="{{href}}">
     <div class="result-contents">
         <div class="result-info-container">
             <a href="{{href}}" class="result-value-title">{{title}}</a> 
@@ -21,7 +21,7 @@
             {{/if}}
         </div>
         <div class="result-category-container">
-            {{#if completeLectures}}
+            {{#if lectureNotes}}
                 <a href="#" class="result-value-notes">Notes</a>
             {{else}}
                 <a href="#" class="result-value-notes"></a>
