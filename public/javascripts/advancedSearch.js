@@ -179,7 +179,9 @@ if(basicSearchBtn){
 
 function searchListener(){
     var basicSearchBtn = document.getElementById('search-button'); //used to check if on basic or adv page
-    var queryText = document.getElementById("adv-search-text").value ? document.getElementById("adv-search-text").value : (new URL(document.location)).searchParams.get("search"); //check for param from basic search
+	 if(document.getElementById("adv-search-text")) {
+		 var queryText = document.getElementById("adv-search-text").value ? document.getElementById("adv-search-text").value : (new URL(document.location)).searchParams.get("search"); //check for param from basic search
+	 }
     if(!basicSearchBtn){
         clearResults();//clear current results
         var res = search(queryText);//search the data for applicable courses
